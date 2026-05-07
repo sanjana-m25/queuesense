@@ -1,0 +1,12 @@
+{
+  "crons": [
+    {
+      "path": "/api/queue/recalculate",
+      "schedule": "*/1 * * * *"
+    },
+    {
+      "path": "/api/consent/send",
+      "schedule": "*/5 * * * *"
+    }
+  ]
+}
