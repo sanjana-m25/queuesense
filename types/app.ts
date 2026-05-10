@@ -46,3 +46,12 @@ export interface QueueResponse {
   recalc_interval_seconds: number;
   queue: QueueEntry[];
 }
+
+export interface BookingConfirmationPayload {
+  patientName: string;
+  phone: string;
+  doctorName: string;
+  scheduledDate: string;
+  scheduledTime: string;
+  position: number;
+}

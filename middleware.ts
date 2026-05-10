@@ -76,8 +76,9 @@ export async function middleware(request: NextRequest) {
     return NextResponse.redirect(dashboardUrl);
   }
 
-  // ── /patient/* passes through without auth ────────────────────────────────
+  // ── /patient/* and /book/* pass through without auth ─────────────────────
   // Patient pages use short-lived consent tokens; no Supabase Auth required.
+  // The /book route is a completely public flow for booking appointments.
 
   // ── Return the (possibly cookie-updated) response ────────────────────────
   return supabaseResponse;

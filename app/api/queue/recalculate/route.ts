@@ -1,7 +1,9 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { createAdminClient } from '@/lib/supabase/admin';
 import { sortQueue } from '@/lib/queue-engine';
-import { QueueEntry } from '@/types/app';
+import { QueueEntry, PatientEtaStatus } from '@/types/app';
+import { SupabaseClient } from '@supabase/supabase-js';
+import { Database } from '@/types/database';
 
 /**
  * POST /api/queue/recalculate
@@ -58,16 +60,17 @@ export async function POST(request: NextRequest) {
       duration_ms: Date.now() - startTime
     });
 
-  } catch (error: any) {
-    console.error('Queue Recalculation Error:', error);
+  } catch (error: unknown) {
+    const err = error as Error;
+    console.error('Queue Recalculation Error:', err);
     return NextResponse.json({ 
       error: 'Failed to recalculate queue',
-      details: error.message 
+      details: err.message 
     }, { status: 500 });
   }
 }
 
-async function runRecalculate(doctorId: string, date: string, supabase: any) {
+async function runRecalculate(doctorId: string, date: string, supabase: SupabaseClient<Database>) {
     // 2. Fetch active appointments and current queue entries
     const { data: appointments, error: apptError } = await supabase
       .from('appointments')
@@ -87,6 +90,7 @@ async function runRecalculate(doctorId: string, date: string, supabase: any) {
       .eq('doctor_id', doctorId)
       .eq('scheduled_date', date)
       .in('status', ['scheduled', 'in_consultation']);
+      // booked_via is intentionally not filtered — covers both admin and self-booked
 
     if (apptError) throw apptError;
     if (!appointments || appointments.length === 0) return { recalculated: false, patients_sorted: 0 };
@@ -100,9 +104,9 @@ async function runRecalculate(doctorId: string, date: string, supabase: any) {
     if (queueError) throw queueError;
 
     // 3. Map to QueueEntry[] for the sort engine
-    const mappedEntries: QueueEntry[] = appointments.map((appt: any) => {
-      const qEntry = queueEntries.find(q => q.appointment_id === appt.id);
-      const patient = appt.patients;
+    const mappedEntries: QueueEntry[] = appointments.map((appt) => {
+      const qEntry = (queueEntries as { id: string; appointment_id: string; position: number; is_locked: boolean | null; last_recalc_at: string | null }[]).find((q) => q.appointment_id === appt.id);
+      const patient = (appt as { patients: { id: string, name: string, phone: string, eta_status: string, eta_seconds: number | null } | null }).patients;
 
       return {
         queue_entry_id: qEntry?.id || '',
@@ -111,13 +115,13 @@ async function runRecalculate(doctorId: string, date: string, supabase: any) {
         is_locked: qEntry?.is_locked || false,
         last_recalc_at: qEntry?.last_recalc_at || null,
         patient: {
-          id: patient?.id,
-          name: patient?.name,
-          phone: patient?.phone
+          id: patient?.id || '',
+          name: patient?.name || '',
+          phone: patient?.phone || ''
         },
         scheduled_time: appt.scheduled_time,
         scheduled_date: appt.scheduled_date,
-        eta_status: patient?.eta_status || 'uncertain',
+        eta_status: (patient?.eta_status as PatientEtaStatus) || 'uncertain',
         eta_seconds: patient?.eta_seconds || null,
         eta_minutes: patient?.eta_seconds ? Math.floor(patient.eta_seconds / 60) : null,
         appointment_status: appt.status
@@ -147,13 +151,4 @@ async function runRecalculate(doctorId: string, date: string, supabase: any) {
     }
     
     return { recalculated: true, patients_sorted: sorted.length };
-}
-
-  } catch (error: any) {
-    console.error('Queue Recalculation Error:', error);
-    return NextResponse.json({ 
-      error: 'Failed to recalculate queue',
-      details: error.message 
-    }, { status: 500 });
-  }
 }

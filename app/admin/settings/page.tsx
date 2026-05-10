@@ -60,7 +60,8 @@ export default function AdminSettingsPage() {
 
       if (hospitalData) {
         setHospital(hospitalData);
-        setIntervalValue(hospitalData.settings?.recalc_interval_seconds || 60);
+        const settings = hospitalData.settings as { recalc_interval_seconds?: number } | null;
+        setIntervalValue(settings?.recalc_interval_seconds || 60);
       }
 
       await fetchLogs(0);

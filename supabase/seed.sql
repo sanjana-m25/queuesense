@@ -14,26 +14,23 @@ VALUES (
   'Asia/Kolkata'
 ) ON CONFLICT (id) DO NOTHING;
 
--- ─── 2. Doctors ──────────────────────────────────────────────────────────────
+-- ─── 2. Doctors (10 Doctors) ──────────────────────────────────────────────────
 INSERT INTO doctors (id, hospital_id, name, specialty, avg_consultation_minutes, is_active)
 VALUES
-  (
-    '00000000-0000-0000-0000-000000000010',
-    '00000000-0000-0000-0000-000000000001',
-    'Dr. Priya Mehta',
-    'General Medicine',
-    12.00,
-    true
-  ),
-  (
-    '00000000-0000-0000-0000-000000000011',
-    '00000000-0000-0000-0000-000000000001',
-    'Dr. Arjun Sharma',
-    'Cardiology',
-    15.00,
-    true
-  )
-ON CONFLICT (id) DO NOTHING;
+  ('00000000-0000-0000-0000-000000000010', '00000000-0000-0000-0000-000000000001', 'Sameer Khan', 'Cardiology', 15.00, true),
+  ('00000000-0000-0000-0000-000000000011', '00000000-0000-0000-0000-000000000001', 'Ananya Iyer', 'Pediatrics', 10.00, true),
+  ('00000000-0000-0000-0000-000000000012', '00000000-0000-0000-0000-000000000001', 'Michael Chen', 'Orthopedics', 20.00, true),
+  ('00000000-0000-0000-0000-000000000013', '00000000-0000-0000-0000-000000000001', 'Sarah Jenkins', 'Dermatology', 12.00, true),
+  ('00000000-0000-0000-0000-000000000014', '00000000-0000-0000-0000-000000000001', 'Rajesh Gupta', 'Neurology', 25.00, true),
+  ('00000000-0000-0000-0000-000000000015', '00000000-0000-0000-0000-000000000001', 'Elena Rodriguez', 'Gynecology', 15.00, true),
+  ('00000000-0000-0000-0000-000000000016', '00000000-0000-0000-0000-000000000001', 'David Kim', 'Oncology', 30.00, true),
+  ('00000000-0000-0000-0000-000000000017', '00000000-0000-0000-0000-000000000001', 'Priya Sharma', 'ENT', 10.00, true),
+  ('00000000-0000-0000-0000-000000000018', '00000000-0000-0000-0000-000000000001', 'Robert Miller', 'Urology', 20.00, true),
+  ('00000000-0000-0000-0000-000000000019', '00000000-0000-0000-0000-000000000001', 'Aisha Patel', 'General Medicine', 15.00, true)
+ON CONFLICT (id) DO UPDATE SET
+  name = EXCLUDED.name,
+  specialty = EXCLUDED.specialty,
+  avg_consultation_minutes = EXCLUDED.avg_consultation_minutes;
 
 -- ─── 3. Patients (10 rows) ────────────────────────────────────────────────────
 INSERT INTO patients (id, hospital_id, name, phone, eta_status)

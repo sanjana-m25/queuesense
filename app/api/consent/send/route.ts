@@ -52,6 +52,7 @@ export async function POST(request: NextRequest) {
         .lte('scheduled_time', endTimeStr)
         .is('consent_notified_at', null)
         .eq('status', 'scheduled');
+        // booked_via is intentionally not filtered — covers both admin and self-booked
 
       if (fetchError) throw fetchError;
 

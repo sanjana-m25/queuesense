@@ -17,3 +17,6 @@ export function createBrowserClient() {
     process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
   );
 }
+
+// Alias for compatibility with existing code
+export { createBrowserClient as createClient };

@@ -9,12 +9,15 @@ import {
   ClipboardList, 
   Stethoscope, 
   Settings,
-  LayoutDashboard
+  LayoutDashboard,
+  CalendarPlus
 } from 'lucide-react';
 
 const NAV_ITEMS = [
   { label: 'Queue', href: '/admin/queue', icon: LayoutDashboard },
-  { label: 'Waitlist', href: '/admin/waitlist', icon: ClipboardList },
+  { label: 'Appointments', href: '/admin/appointments', icon: ClipboardList },
+  { label: 'Waitlist', href: '/admin/waitlist', icon: Users },
+  { label: 'Slots', href: '/admin/slots', icon: CalendarPlus },
   { label: 'Doctors', href: '/admin/doctors', icon: Stethoscope },
   { label: 'Settings', href: '/admin/settings', icon: Settings },
 ];

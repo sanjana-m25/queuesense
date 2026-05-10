@@ -1,8 +1,8 @@
 "use client";
 
-import React, { useState } from 'react';
+import React, { useState, Suspense } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
-import { createClient } from '@/lib/supabase/client';
+import { createBrowserClient } from '@/lib/supabase/client';
 import { toast } from 'sonner';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -11,6 +11,18 @@ import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle }
 import { Loader2 } from 'lucide-react';
 
 export default function LoginPage() {
+  return (
+    <Suspense fallback={
+      <div className="flex justify-center p-8">
+        <Loader2 className="w-6 h-6 animate-spin text-zinc-300" />
+      </div>
+    }>
+      <LoginForm />
+    </Suspense>
+  );
+}
+
+function LoginForm() {
   const router = useRouter();
   const searchParams = useSearchParams();
   const [email, setEmail] = useState('');
@@ -24,7 +36,7 @@ export default function LoginPage() {
     setIsLoading(true);
 
     try {
-      const supabase = createClient();
+      const supabase = createBrowserClient();
       const { data, error } = await supabase.auth.signInWithPassword({
         email,
         password,
@@ -98,9 +110,9 @@ export default function LoginPage() {
           </div>
         </CardContent>
         <CardFooter>
-          <Button 
-            className="w-full bg-zinc-900 text-zinc-50 hover:bg-zinc-800 dark:bg-zinc-50 dark:text-zinc-900 dark:hover:bg-zinc-200" 
-            type="submit" 
+          <Button
+            className="w-full bg-zinc-900 text-zinc-50 hover:bg-zinc-800 dark:bg-zinc-50 dark:text-zinc-900 dark:hover:bg-zinc-200"
+            type="submit"
             disabled={isLoading}
           >
             {isLoading ? (

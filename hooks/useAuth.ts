@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { createClient } from '@/lib/supabase/client';
+import { createBrowserClient } from '@/lib/supabase/client';
 import { User } from '@supabase/supabase-js';
 
 /**
@@ -13,7 +13,7 @@ export function useAuth() {
   const [role, setRole] = useState<string | null>(null);
   const [loading, setLoading] = useState(true);
 
-  const supabase = createClient();
+  const supabase = createBrowserClient();
 
   useEffect(() => {
     // 1. Initial Fetch

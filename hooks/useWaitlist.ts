@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { createClient } from '@/lib/supabase/client';
+import { createBrowserClient } from '@/lib/supabase/client';
 
 /**
  * useWaitlist Realtime Hook
@@ -14,7 +14,7 @@ export function useWaitlist(doctorId: string | null, date: string | null) {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
-  const supabase = createClient();
+  const supabase = createBrowserClient();
 
   const fetchWaitlist = async () => {
     if (!doctorId || !date) return;

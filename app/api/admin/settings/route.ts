@@ -39,8 +39,9 @@ export async function PATCH(request: NextRequest) {
 
     // 4. Update Hospital Settings
     // We assume a 'settings' JSONB column exists as per the PRD recommendation.
+    const currentSettings = (hospital.settings as Record<string, unknown>) || {};
     const updatedSettings = {
-      ...(hospital.settings as object || {}),
+      ...currentSettings,
       recalc_interval_seconds: interval
     };
 
@@ -66,7 +67,7 @@ export async function PATCH(request: NextRequest) {
 
     return NextResponse.json({ updated: true });
 
-  } catch (error: any) {
+  } catch (error) {
     console.error('Admin Settings Update Error:', error);
     return NextResponse.json({ error: 'Failed to update admin settings' }, { status: 500 });
   }

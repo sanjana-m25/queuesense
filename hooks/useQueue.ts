@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { createClient } from '@/lib/supabase/client';
+import { createBrowserClient } from '@/lib/supabase/client';
 import { QueueEntry } from '@/types/app';
 
 /**
@@ -16,7 +16,7 @@ export function useQueue(doctorId: string | null, date: string | null) {
   const [error, setError] = useState<string | null>(null);
   const [lastUpdatedAt, setLastUpdatedAt] = useState<string | null>(null);
 
-  const supabase = createClient();
+  const supabase = createBrowserClient();
 
   const fetchQueue = async () => {
     if (!doctorId || !date) return;

@@ -1,4 +1,4 @@
-﻿export type Json =
+export type Json =
   | string
   | number
   | boolean
@@ -59,6 +59,64 @@ export type Database = {
           },
         ]
       }
+      available_slots: {
+        Row: {
+          appointment_id: string | null
+          created_at: string | null
+          doctor_id: string
+          duration_minutes: number
+          hospital_id: string
+          id: string
+          is_booked: boolean
+          slot_date: string
+          slot_time: string
+        }
+        Insert: {
+          appointment_id?: string | null
+          created_at?: string | null
+          doctor_id: string
+          duration_minutes?: number
+          hospital_id: string
+          id?: string
+          is_booked?: boolean
+          slot_date: string
+          slot_time: string
+        }
+        Update: {
+          appointment_id?: string | null
+          created_at?: string | null
+          doctor_id?: string
+          duration_minutes?: number
+          hospital_id?: string
+          id?: string
+          is_booked?: boolean
+          slot_date?: string
+          slot_time?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "available_slots_appointment_id_fkey"
+            columns: ["appointment_id"]
+            isOneToOne: false
+            referencedRelation: "appointments"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "available_slots_doctor_id_fkey"
+            columns: ["doctor_id"]
+            isOneToOne: false
+            referencedRelation: "doctors"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "available_slots_hospital_id_fkey"
+            columns: ["hospital_id"]
+            isOneToOne: false
+            referencedRelation: "hospitals"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       appointments: {
         Row: {
           arrived_at: string | null
@@ -72,6 +130,8 @@ export type Database = {
           scheduled_date: string
           scheduled_time: string
           status: string
+          booked_via: string
+          symptoms: string | null
         }
         Insert: {
           arrived_at?: string | null
@@ -85,6 +145,8 @@ export type Database = {
           scheduled_date: string
           scheduled_time: string
           status?: string
+          booked_via?: string
+          symptoms?: string | null
         }
         Update: {
           arrived_at?: string | null
@@ -98,6 +160,8 @@ export type Database = {
           scheduled_date?: string
           scheduled_time?: string
           status?: string
+          booked_via?: string
+          symptoms?: string | null
         }
         Relationships: [
           {
@@ -215,6 +279,7 @@ export type Database = {
           lng: number
           name: string
           timezone: string
+          settings: Json | null
         }
         Insert: {
           address?: string | null
@@ -224,6 +289,7 @@ export type Database = {
           lng: number
           name: string
           timezone?: string
+          settings?: Json | null
         }
         Update: {
           address?: string | null
@@ -233,6 +299,7 @@ export type Database = {
           lng?: number
           name?: string
           timezone?: string
+          settings?: Json | null
         }
         Relationships: []
       }
@@ -332,6 +399,8 @@ export type Database = {
           id: string
           name: string
           phone: string
+          age: number | null
+          is_self_registered: boolean | null
         }
         Insert: {
           created_at?: string | null
@@ -342,6 +411,8 @@ export type Database = {
           id?: string
           name: string
           phone: string
+          age?: number | null
+          is_self_registered?: boolean | null
         }
         Update: {
           created_at?: string | null
@@ -352,6 +423,8 @@ export type Database = {
           id?: string
           name?: string
           phone?: string
+          age?: number | null
+          is_self_registered?: boolean | null
         }
         Relationships: [
           {
